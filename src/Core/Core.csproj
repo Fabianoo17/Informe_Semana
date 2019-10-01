@@ -170,6 +170,7 @@
     <Compile Include="Data\Interfaces\IRepositoryT002_INFORME.cs" />
     <Compile Include="Data\Interfaces\IRepositoryT003_COORDENACOES.cs" />
     <Compile Include="Data\Interfaces\IRepositoryT004_SEMANA.cs" />
+    <Compile Include="Data\Interfaces\IRepositoryT005_PRORROGA_INFORME.cs" />
     <Compile Include="Data\Interfaces\IRepositoryVW001_INFORME_ATUAL.cs" />
     <Compile Include="Data\Repositories\ExemploRepository.cs" />
     <Compile Include="Data\Repositories\IRepository.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="Data\Repositories\RepositoryT002_INFORME.cs" />
     <Compile Include="Data\Repositories\RepositoryT003_COORDENACOES.cs" />
     <Compile Include="Data\Repositories\RepositoryT004_SEMANA.cs" />
+    <Compile Include="Data\Repositories\RepositoryT005_PRORROGA_INFORME.cs" />
     <Compile Include="Data\Repositories\RepositoryVW001_INFORME_ATUAL.cs" />
     <Compile Include="Filters\GlobalFilterTool.cs" />
     <Compile Include="Global.asax.cs">
@@ -196,6 +198,7 @@
     <Compile Include="Models\T002_INFORME.cs" />
     <Compile Include="Models\T003_COORDENACOES.cs" />
     <Compile Include="Models\T004_SEMANA.cs" />
+    <Compile Include="Models\T005_PRORROGA_INFORME.cs" />
     <Compile Include="Models\VW001_INFORME_ATUAL.cs" />
     <Compile Include="Service\ADService.cs" />
     <Compile Include="Settings.cs" />

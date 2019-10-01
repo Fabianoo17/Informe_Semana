@@ -65,6 +65,27 @@ namespace Core.Controllers
         }
 
 
+        [HttpPost]
+        [AuthorizePerfil(new[] { Acesso.Administrador, Acesso.Basico })]
+        public ActionResult SalvaProrrogacao([Bind(Include = "T005_ID_PRORROGA_INFORME,T002_ID_INFORME,T004_NR_SEMANA,T004_COMPETENCIA")] T005_PRORROGA_INFORME t005_PRORROGA_INFORME)
+        {
+            JsonResultCustom jsonResult = new JsonResultCustom();
+    
+            if (ModelState.IsValid)
+            {
+                //if (t002_INFORME.T002_ID_INFORME > 0)
+                //{
+                //    _informe.Atualizar(t002_INFORME);
+                //    _informe.SaveChanges();
+                //    jsonResult.Success = true;
+                //    jsonResult.Messages.Add("Alteração realizada com sucesso.");
+                //}
+  
+            }
+            return Json(jsonResult);
+        }
+
+
 
         [AuthorizePerfil(new[] { Acesso.Administrador, Acesso.Basico })]
         public ActionResult carregaForm(int? COORDENACAO)

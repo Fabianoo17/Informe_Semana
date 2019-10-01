@@ -28,22 +28,26 @@
 
                     <label>@(count). @item.T002_INFORME_TITULO</label>
 
-                    <form>
+                    <form id="formModal@(count)">
 
-                        <div class="i-checks"> <label> <input class="i-checks" type="radio" name="choice" value="1" checked> <i></i>  Sim </label> </div>
-                       
-                            <input class="i-checks" type="radio" name="choice" value="2"> Não
-                            <input class="i-checks" type="radio" name="choice" value="3"> Manter
-
-</form>
-
+                        <div class="col-md-9 row" style="margin-left:20px;">
+                            <input id="T002_ID_INFORME" name="T002_ID_INFORME" type="hidden" value="@item.T002_ID_INFORME" />
+                            <input id="T003_ID_COORDENACAO" name="T003_ID_COORDENACAO" type="hidden" value="@ViewBag.comp" />
+                            <input id="T004_NR_SEMANA" name="T003_ID_COORDENACAO" type="hidden" value="@ViewBag.semana" />
+                            <div class="col-md-4"> @Html.RadioButton("statusInforme", 1, false, new { @class = "i-checks" }) Sim </div>
+                            <div class="col-md-4"> @Html.RadioButton("statusInforme", 2, false) Não </div>
+                            <div class="col-md-4"> @Html.RadioButton("statusInforme", 3, false) Manter </div>
+                            </div>
+                   </form>
+                    @(count += 1)
                 }
 
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Salvar</button>
+                @Html.CheckBox("mostrarNovamente", false, new {@class = "pull-left"}) Não ver mais essa semana
+                <button onclick="prorrogaInforme()" class="btn btn-primary">Salvar</button>
                 <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-               
+
             </div>
         </div>
     </div>
@@ -109,7 +113,7 @@
 
                     <div class="ibox-content">
 
-                       
+
                         <form id="form@(i+1)" class="" method="post" action="~/AdminInforme/create" novalidate="novalidate">
                             @{if (verif)
                             {<input id="T002_ID_INFORME" name="T002_ID_INFORME" type="hidden" value="@Atual[i].T002_ID_INFORME" /> }}
@@ -345,7 +349,15 @@
 
     }
 
+    function prorrogaInforme() {
 
+        var escolha = $("#formModal1");
+        var formData = escolha.serialize();
+        console.log(formData['statusInforme']);
+
+
+
+    }
 
 
 
