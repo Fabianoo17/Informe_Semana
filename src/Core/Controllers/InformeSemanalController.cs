@@ -18,8 +18,6 @@ namespace Core.Controllers
 
 
             viewInforme.t003_coordenacoes = _coordenacaoes.ObterTodos();
-            viewInforme.t002_informe = _informe.ObterTodos();
-            viewInforme.t004_semana = viewInforme.buscarSemana();
             viewInforme.vw001_informe_atual = _vwInforme.ObterTodos();
             
 
