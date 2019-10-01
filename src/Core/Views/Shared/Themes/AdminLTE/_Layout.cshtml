@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>@ViewBag.Title - @Settings.SystemName</title>
+
+
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Content/css/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Toastr style -->
+    <link href="~/Content/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <link href="~/Content/css/Site.css" rel="stylesheet" />
+    <link href="~/Content/css/plugins/iCheck/custom.css" rel="stylesheet" />
+
+
+    <link href="~/Content/css/animate.css" rel="stylesheet" />
+    <link href="~/Content/css/style.css" rel="stylesheet">
+
+    <!-- Google Font -->
+    @Html.Partial("Themes/AdminLTE/_IncludeFonts")
+
+    <!-- Theme style -->
+    @RenderSection("css", required: false)
+
+    <script src="~/Assets/Plugins/modernizr/modernizr.min.js?v=@AssemblyInfo.VersionHash"></script>
+</head>
+<body class="top-navigation">
+    <div id="wrapper">
+
+
+
+        @*@Html.Partial("Themes/AdminLTE/_Sidebar")*@
+
+        <!-- Content Wrapper. Contains page content -->
+        <div id="page-wrapper" class="" style="background-image: url('../../../../Content/img/back.jpg');">
+            <!-- Content Header (Page header) -->
+            <div class="row border-bottom ">
+
+                @Html.Partial("Themes/AdminLTE/_Header")
+
+            </div>
+            <!-- Main content -->
+            <div style="margin-top:10px;">
+                @RenderBody()
+            </div>
+
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        @*<footer class="main-footer" style="margin-left:0px;">
+                &copy; @DateTime.Now.Year CETEC - CN TECNOLOGIA DA INFORMAÇÃO
+            </footer>*@
+
+        <!-- Control Sidebar -->
+        <!-- /.control-sidebar -->
+        <!-- Add the sidebar's background. This div must be placed
+             immediately after the control sidebar -->
+
+    </div>
+    <!-- ./wrapper -->
+
+
+    <script src="~/Content/js/jquery-3.1.1.min.js"></script>
+    <script src="~/Content/js/bootstrap.min.js"></script>
+    <script src="~/Assets/Plugins/jquery.blockui/jquery.blockUI.js?v=@AssemblyInfo.VersionHash"></script>
+    <script src="~/Assets/Plugins/jquery.mask/jquery.mask.min.js?v=@AssemblyInfo.VersionHash"></script>
+    <script src="~/Assets/Plugins/pace/pace.min.js?v=@AssemblyInfo.VersionHash"></script>
+    <script src="~/Assets/Plugins/momentjs/moment.min.js?v=@AssemblyInfo.VersionHash"></script>
+    <script src="~/Assets/Plugins/momentjs/locale/pt-br.js?v=@AssemblyInfo.VersionHash"></script>
+    <script src="~/Assets/Plugins/toastr/toastr.min.js?v=@AssemblyInfo.VersionHash"></script>
+    <script src="~/Assets/Plugins/jquery.slimscroll/jquery.slimscroll.min.js?v=@AssemblyInfo.VersionHash"></script>
+    <script src="~/Assets/Plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js?v=@AssemblyInfo.VersionHash"></script>
+    <script src="~/Assets/Plugins/bootstrap-daterangepicker/daterangepicker.js?v=@AssemblyInfo.VersionHash"></script>
+    <script src="~/Assets/Plugins/select2/js/select2.full.min.js?v=@AssemblyInfo.VersionHash"></script>
+    <script src="~/Assets/Plugins/select2/js/i18n/pt-BR.js?v=@AssemblyInfo.VersionHash"></script>
+    <script src="~/Assets/Plugins/jquery.autocomplete/jquery.autocomplete.min.js?v=@AssemblyInfo.VersionHash"></script>
+
+    <!-- AdminLTE App -->
+    <script src="~/Assets/Themes/AdminLTE/js/adminlte.min.js?v=@AssemblyInfo.VersionHash"></script>
+    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+   
+    <script src="~/Assets/js/init-default.js?v=@AssemblyInfo.VersionHash"></script>
+ 
+    @RenderSection("scripts", required: false)
+
+
+
+    <script src="~/content/js/popper.min.js?v=@AssemblyInfo.VersionHash"></script>
+    <script src="~/content/js/plugins/metisMenu/jquery.metisMenu.js?v=@AssemblyInfo.VersionHash"></script>
+
+        <!-- Custom and plugin javascript -->
+
+        <!-- Flot -->
+    <script src="~/content/js/plugins/flot/jquery.flot.js?v=@AssemblyInfo.VersionHash"></script>
+    <script src="~/content/js/plugins/flot/jquery.flot.tooltip.min.js?v=@AssemblyInfo.VersionHash"></script>
+    <script src="~/content/js/plugins/flot/jquery.flot.resize.js?v=@AssemblyInfo.VersionHash"></script>
+        <!-- ChartJS-->
+    <script src="~/content/js/plugins/chartJs/Chart.min.js?v=@AssemblyInfo.VersionHash"></script>
+        <!-- Peity -->
+    <script src="~/content/js/plugins/peity/jquery.peity.min.js?v=@AssemblyInfo.VersionHash"></script>
+        <!-- Peity demo -->
+
+
+
+
+
+
+
+        @section Scripts{
+
+            <script>
+                $(document).ready(function () {
+
+
+
+
+
+
+                });
+
+
+
+            </script>
+        }
+
+
+
+
+</body>
+</html>
+

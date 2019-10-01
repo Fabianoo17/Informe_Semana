@@ -1,0 +1,27 @@
+﻿@{
+    Pager pager = ViewBag.Pager;
+}
+
+<div>
+    @if (pager.HasPreviousPage)
+    {
+        <button title="Primeira página" type="submit" name="page" value="@pager.FirstPageIndex" class="btn btn-default btn-pagination"><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>
+        <button title="Voltar" type="submit" name="page" value="@pager.PreviousPageIndex" class="btn btn-default btn-pagination"><i class="fa fa-angle-left" aria-hidden="true"></i></button>
+    }
+    @foreach (int page in pager)
+    {
+        if (page == pager.CurrentPageIndex)
+        {
+            <button type="button" disabled="disabled" class="btn btn-primary">@page</button>
+        }
+        else
+        {
+            <button type="submit" name="page" value="@page" class="btn btn-default btn-pagination">@page</button>
+        }
+    }
+    @if (pager.HasNextPage)
+    {
+        <button title="Próximo" type="submit" name="page" value="@pager.NextPageIndex" class="btn btn-default btn-pagination"><i class="fa fa-angle-right" aria-hidden="true"></i></button>
+        <button title="Última página" type="submit" name="page" value="@pager.LastPageIndex" class="btn btn-default btn-pagination"><i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
+    }
+</div>

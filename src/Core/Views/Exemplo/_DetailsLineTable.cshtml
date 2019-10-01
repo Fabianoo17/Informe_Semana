@@ -1,0 +1,26 @@
+﻿@model Core.ViewModels.Exemplo.ExemploEntity
+
+@{
+    var isAdministrador = this.IfAccess(new[] { Acesso.Administrador });
+}
+
+<td>
+    @Html.DisplayFor(modelItem => Model.NOME)
+</td>
+<td>
+    @Html.DisplayFor(modelItem => Model.DESCRICAO)
+</td>
+<td>
+    @Html.DisplayFor(modelItem => Model.ATIVO)
+</td>
+
+@if (isAdministrador)
+{
+    <td class="th-td-action1">
+        <button onclick="editarItem(this);" type="button" title="Editar" class="btn btn-default" data-loading-text="..." data-url="@Url.Action("Edit", new { id = Model.EXEMPLO_ID })"><i class="fa fa-pencil"></i></button>
+    </td>
+}
+
+<td class="th-td-action1">
+    <button onclick="detalheItem(this);" type="button" data-loading-text="..." data-url="@Url.Action("Details", new { id = Model.EXEMPLO_ID })" title="ver detalhes" class="btn btn-default"><i class="fa fa-eye"></i></button>
+</td>

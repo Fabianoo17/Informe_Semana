@@ -1,0 +1,225 @@
+﻿@model Core.ViewModels.Exemplo.ExemploListViewModel
+
+@{
+    var isAdministrador = this.IfAccess(new[] { Acesso.Administrador });
+    string colspan = (isAdministrador) ? "5" : "4";
+}
+
+@if (Model.ItemCount > 0)
+{
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <h3 class="box-title">Resultado</h3>
+            <div class="box-tools pull-right">
+                <form action="@Url.Action("ExportarExcel2")" method="post" id="form-excel" onsubmit="return false;">
+                    @Html.HiddenFor(model => model.Filtro.Nome)
+                    @Html.HiddenFor(model => model.Filtro.Descricao)
+                    @Html.HiddenFor(model => model.Filtro.Ativo)
+                    <button id="btn-excel" class="btn btn-success btn-sm" type="button"><i class="fa fa-file-excel-o"></i> Exportar Excel</button>
+                </form>
+            </div><!-- /.box-tools -->
+        </div><!-- /.box-header -->
+        <div class="box-body">
+
+            <table class="table table-condensed table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th style="width:30%;">
+                            @Html.DisplayNameFor(model => model.Exemplo.NOME)
+                        </th>
+                        <th style="width:30%;">
+                            @Html.DisplayNameFor(model => model.Exemplo.DESCRICAO)
+                        </th>
+                        <th style="width:30%;">
+                            @Html.DisplayNameFor(model => model.Exemplo.ATIVO)
+                        </th>
+                        @if (isAdministrador)
+                        {
+                            <th class="th-td-action1"></th>
+                        }
+                        <th class="th-td-action1"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ExemploList)
+                    {
+                        <tr id="@item.EXEMPLO_ID">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NOME)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DESCRICAO)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ATIVO)
+                            </td>
+
+                            @if (isAdministrador)
+                            {
+                                <td class="tr-th-action1">
+                                    <button onclick="editarItem(this);" type="button" data-loading-text="..." data-url="@Url.Action("Edit", new { id = item.EXEMPLO_ID })" title="Editar" class="btn btn-default"><i class="fa fa-pencil"></i></button>
+                                </td>
+                            }
+                            
+                            <td class="tr-th-action1">
+                                <button onclick="detalheItem(this);" type="button" data-loading-text="..." data-url="@Url.Action("Details", new { id = item.EXEMPLO_ID })" title="Ver detalhes" class="btn btn-default"><i class="fa fa-eye"></i></button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="@colspan">
+                            Total de itens: @Model.ItemCount.ToString("N0", new CultureInfo("pt-BR"))
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div class="text-center" style="margin-top: 20px; margin-bottom: 20px;">
+                <form action="@Url.Action("Search")" method="post" id="form-pagination" onsubmit="return false;">
+                    @Html.HiddenFor(model => model.Filtro.Nome)
+                    @Html.HiddenFor(model => model.Filtro.Descricao)
+                    @Html.HiddenFor(model => model.Filtro.Ativo)
+                    @Html.Hidden("page")
+
+                    @Html.Partial("_Pager")
+                </form>
+            </div>
+
+        </div><!-- /.box-body -->
+    </div><!-- /.box -->
+
+}
+else
+{
+    <div class="alert alert-warning">
+        <h4>Ops! Nenhum resultado encontrado. </h4>
+        <p>Altere a combinação dos filtros e tente novamente.</p>
+    </div>
+}
+
+<script src="~/Assets/Plugins/jquery.fileDownload/jquery.fileDownload.js?v=@AssemblyInfo.VersionHash"></script>
+<script src="~/Assets/Plugins/jquery.fileDownload/support/shCore.js?v=@AssemblyInfo.VersionHash"></script>
+<script src="~/Assets/Plugins/jquery.fileDownload/support/shBrushJScript.js?v=@AssemblyInfo.VersionHash"></script>
+<script src="~/Assets/Plugins/jquery.fileDownload/support/shBrushXml.js?v=@AssemblyInfo.VersionHash"></script>
+<link href="~/Assets/Plugins/jquery.fileDownload/support/shCoreDefault.css?v=@AssemblyInfo.VersionHash" rel="stylesheet" />
+
+<script>
+    jQuery(function ($) {
+
+        var $btnPagination = $('.btn-pagination');
+
+        $btnPagination.unbind('click');
+        $btnPagination.click(paginaDados);
+
+        $('#btn-excel').on('click', function () {
+
+            blockUI('Exportando arquivo...');
+
+            var $form = $('#form-excel');
+            var thisForm = $form[0];
+
+            $.fileDownload(thisForm.action, {
+                httpMethod: thisForm.method,
+                data: $form.serialize(),
+                successCallback: function (url) {
+                    unblockUI();
+                },
+                failCallback: function (responseHtml, url) {
+                    unblockUI();
+                    toastr.options = {
+                        "closeButton": true,
+                        "timeOut": "10000",
+                        "positionClass": "toast-bottom-right"
+                    }
+                    toastr["error"]('Ocorreu um erro na requisição.');
+                }
+            });
+        });
+
+        function setScroll() {
+            $('html, body').animate({
+                scrollTop: 0
+            }, 400);
+        }
+
+        function paginaDados(ev) {
+
+            var $buttonClicked = $(this),
+                numberPage = $buttonClicked.val(),
+                $form,
+                form,
+                formAction,
+                formData;
+
+            ev.preventDefault();
+            blockUI('Carregando...');
+
+            $('#page').val(numberPage);
+
+            $form = $('#form-pagination');
+            form = $form[0];
+            formData = $form.serialize();
+
+            $.ajax({
+                dataType: 'html',
+                url: form.action,
+                type: 'POST',
+                data: formData
+            }).done(function (data) {
+                $('#search-result').html(data);
+                unblockUI();
+                setScroll();
+            }).fail(function (error) {
+                console.error(error);
+                unblockUI();
+                toastr.options = {
+                    "closeButton": true,
+                    "timeOut": "10000",
+                    "positionClass": "toast-bottom-right"
+                }
+                toastr["error"]('Ocorreu um erro na requisição.');
+            });
+        }
+
+    });
+
+
+    function editarItem($this) {
+        var element = $($this);
+        element.button('loading');
+        var url = element.attr('data-url');
+
+        $('#modal-content').load(url, function (response, status) {
+            element.button('reset');
+            if (status == 'error') {
+                toastr.options = {
+                    "closeButton": true,
+                    "timeOut": "10000",
+                    "positionClass": "toast-bottom-right"
+                }
+                toastr["error"]('Ocorreu um erro na requisição.');
+            }
+        });
+    }
+
+    function detalheItem($this) {
+        var element = $($this);
+        element.button('loading');
+        var url = element.attr('data-url');
+
+        $('#modal-content').load(url, function (response, status) {
+            element.button('reset');
+            if (status == 'error') {
+                toastr.options = {
+                    "closeButton": true,
+                    "timeOut": "10000",
+                    "positionClass": "toast-bottom-right"
+                }
+                toastr["error"]('Ocorreu um erro na requisição.');
+            }
+        });
+    }
+
+</script>

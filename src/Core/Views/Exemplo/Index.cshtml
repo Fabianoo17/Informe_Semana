@@ -1,0 +1,207 @@
+﻿@model Core.ViewModels.Exemplo.ExemploListViewModel
+
+@{
+    ViewBag.Title = "Exemplo";
+}
+
+<div class="box">
+    <div class="box-header with-border">
+        <h3 class="box-title">Filtro</h3>
+        <div class="box-tools pull-right">
+            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div><!-- /.box-tools -->
+    </div><!-- /.box-header -->
+    <div class="box-body">
+
+        <form action="@Url.Action("Index")" method="post" class="form-horizontal">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Filtro.Nome, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Filtro.Nome, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Filtro.Nome, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Filtro.Descricao, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Filtro.Descricao, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Filtro.Descricao, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Filtro.Ativo, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.Filtro.Ativo, ViewBag.OpcoesList as IEnumerable<SelectListItem>, "Todos", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Filtro.Ativo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <button id="btn-pesquisar" type="submit" class="btn btn-primary pull-right"><i class="fa fa-search"></i> Perquisar</button>
+                    <a href="@Url.Action("Index")" class="btn btn-default pull-right margin-r-5"><i class="fa fa-eraser"></i> Limpar</a>
+                </div>
+            </div>
+        </form>
+
+    </div><!-- /.box-body -->
+</div><!-- /.box -->
+
+@if (Model.ItemCount > 0)
+{
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <h3 class="box-title">Resultado</h3>
+            <div class="box-tools pull-right">
+                
+                <form action="@Url.Action("ExportarExcel")" method="post" id="form-excel" onsubmit="return false;">
+                    @Html.HiddenFor(model => model.Filtro.Nome)
+                    @Html.HiddenFor(model => model.Filtro.Descricao)
+                    @Html.HiddenFor(model => model.Filtro.Ativo)
+                    <button id="btn-excel" class="btn btn-success btn-sm" type="button"><i class="fa fa-file-excel-o"></i> Exportar Excel</button>
+                </form>
+
+            </div><!-- /.box-tools -->
+        </div><!-- /.box-header -->
+        <div class="box-body">
+
+            <table class="table table-condensed table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th style="width:30%;">
+                            @Html.DisplayNameFor(model => model.Exemplo.NOME)
+                        </th>
+                        <th style="width:30%;">
+                            @Html.DisplayNameFor(model => model.Exemplo.DESCRICAO)
+                        </th>
+                        <th style="width:30%;">
+                            @Html.DisplayNameFor(model => model.Exemplo.ATIVO)
+                        </th>                        
+                        <th class="th-td-action1"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ExemploList)
+                    {
+                        <tr id="@item.EXEMPLO_ID">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NOME)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DESCRICAO)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ATIVO)
+                            </td>
+                            <td class="tr-th-action1">
+                                <button onclick="detalheItem(this);" type="button" data-loading-text="..." data-url="@Url.Action("Details", new { id = item.EXEMPLO_ID })" title="Ver detalhes" class="btn btn-default"><i class="fa fa-eye"></i></button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            Total de itens: @Model.ItemCount.ToString("N0", new CultureInfo("pt-BR"))
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div class="text-center" style="margin-top: 20px; margin-bottom: 20px;">
+                <form action="@Url.Action("Index")" method="post" id="form-pagination">
+                    @Html.HiddenFor(model => model.Filtro.Nome)
+                    @Html.HiddenFor(model => model.Filtro.Descricao)
+                    @Html.HiddenFor(model => model.Filtro.Ativo)
+
+                    @Html.Partial("_Pager")
+                </form>
+            </div>
+
+        </div><!-- /.box-body -->
+    </div><!-- /.box -->
+
+    <div id="modal-content"></div>
+}
+else if (ViewBag.Submit == 1)
+{
+    <div class="alert alert-warning">
+        <h4>Ops! Nenhum resultado encontrado. </h4>
+        <p>Altere a combinação dos filtros e tente novamente.</p>
+    </div>
+}
+
+@section scripts{
+
+    <script src="~/Assets/Plugins/jquery.fileDownload/jquery.fileDownload.js?v=@AssemblyInfo.VersionHash"></script>
+    <script src="~/Assets/Plugins/jquery.fileDownload/support/shCore.js?v=@AssemblyInfo.VersionHash"></script>
+    <script src="~/Assets/Plugins/jquery.fileDownload/support/shBrushJScript.js?v=@AssemblyInfo.VersionHash"></script>
+    <script src="~/Assets/Plugins/jquery.fileDownload/support/shBrushXml.js?v=@AssemblyInfo.VersionHash"></script>
+    <link href="~/Assets/Plugins/jquery.fileDownload/support/shCoreDefault.css?v=@AssemblyInfo.VersionHash" rel="stylesheet" />
+
+    <script>
+        jQuery(function ($) {
+
+            $('#btn-pesquisar').click(function () {
+                blockUI('Carregando...');
+                return true;
+            });
+
+            $('#btn-excel').on('click', function () {
+
+                blockUI('Exportando arquivo...');
+
+                var $form = $('#form-excel');
+                var thisForm = $form[0];
+
+                $.fileDownload(thisForm.action, {
+                    httpMethod: thisForm.method,
+                    data: $form.serialize(),
+                    successCallback: function (url) {
+                        unblockUI();
+                    },
+                    failCallback: function (responseHtml, url) {
+                        unblockUI();
+                        toastr.options = {
+                            "closeButton": true,
+                            "timeOut": "10000",
+                            "positionClass": "toast-bottom-right"
+                        }
+                        toastr["error"]('Ocorreu um erro na requisição.');
+                    }
+                });
+            });       
+
+        });
+
+        function detalheItem($this) {
+            var element = $($this);
+            element.button('loading');
+            var url = element.attr('data-url');
+
+            $('#modal-content').load(url, function (response, status) {
+                element.button('reset');
+                if (status == 'error') {
+                    toastr.options = {
+                        "closeButton": true,
+                        "timeOut": "10000",
+                        "positionClass": "toast-bottom-right"
+                    }
+                    toastr["error"]('Ocorreu um erro na requisição.');
+                }
+            });
+        }
+
+    </script>
+}

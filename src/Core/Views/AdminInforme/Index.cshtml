@@ -1,0 +1,102 @@
+﻿@model Core.ViewModels.InformeSemanal.ViewModelMontarInforme
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="form-group col-md-12">
+
+    <div class="pull-right">
+        @Html.DropDownList("T003_ID_COORDENACAO", null, htmlAttributes: new { @class = "btn btn-default dropdown-toggle dpl-topbar float-right", @type = "button", onchange = "carregaForm()" })
+        
+    </div>
+</div>
+
+<div class="titulo" id="titulo"><h3>Qual seu planejamento para esta semana? <br /> Insira duas ações:</h3></div>
+<div id="carregaForm"></div>
+
+
+
+
+
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+
+
+    $(document).ready(function () {
+        carregaFormSemModal();
+
+     
+   
+
+
+    });
+
+
+    function carregaForm() {
+      
+        //captura
+        var coord = $('#T003_ID_COORDENACAO').val();
+
+        //limpa
+        $('#carregaForm').html('');
+       $.post("/AdminInforme/carregaForm/", { COORDENACAO: coord }, function (data) {
+            //popula
+            $('#carregaForm').html(data);
+
+            mostrarModal();
+            
+        });
+
+
+
+
+
+       
+
+
+
+
+    }
+    function carregaFormSemModal() {
+
+        //captura
+        var coord = $('#T003_ID_COORDENACAO').val();
+
+        //limpa
+        $('#carregaForm').html('');
+        $.post("/AdminInforme/carregaForm/", { COORDENACAO: coord }, function (data) {
+            //popula
+            $('#carregaForm').html(data);
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+    }
+
+  
+
+  
+
+
+
+
+
+
+
+
+
+    </script>
+
+    }

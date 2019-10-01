@@ -1,0 +1,58 @@
+﻿@model Core.ViewModels.Exemplo.ExemploEntity
+
+<div class="modal fade" id="modal-details" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Detalhes Item</h4>
+            </div>
+            <div class="modal-body">
+
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.EXEMPLO_ID)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.EXEMPLO_ID)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.NOME)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.NOME)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.DESCRICAO)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.DESCRICAO)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ATIVO)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.ATIVO)
+                    </dd>
+                </dl>
+
+            </div><!--/modal-body-->
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            </div><!--/modal-footer-->
+        </div><!--modal-content-->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script>
+    jQuery(function ($) {
+        var myModal = $('#modal-details');
+        myModal.modal('show');
+    });
+</script>

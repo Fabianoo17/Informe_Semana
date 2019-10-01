@@ -1,0 +1,130 @@
+﻿@model Core.ViewModels.Exemplo.ExemploListViewModel
+
+@{
+    var isAdministrador = this.IfAccess(new[] { Acesso.Administrador });
+}
+
+@{
+    ViewBag.Title = "Exemplo JS";
+}
+
+<div class="box">
+    <div class="box-header with-border">
+        <h3 class="box-title">Filtro</h3>
+        <div class="box-tools pull-right">
+            @if (isAdministrador)
+            {
+                <button onclick="adicionarItem(this);" data-loading-text="..." data-url="@Url.Action("Create")" type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></button>
+            }
+        
+            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div><!-- /.box-tools -->
+    </div><!-- /.box-header -->
+    <div class="box-body">
+
+        <form id="form-filtro" action="@Url.Action("Search")" method="post" class="form-horizontal" onsubmit="return false;">
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Filtro.Nome, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Filtro.Nome, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Filtro.Nome, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Filtro.Descricao, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Filtro.Descricao, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Filtro.Descricao, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Filtro.Ativo, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.Filtro.Ativo, ViewBag.OpcoesList as IEnumerable<SelectListItem>, "Todos", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Filtro.Ativo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <button id="btn-pesquisar" type="submit" class="btn btn-primary pull-right"><i class="fa fa-search"></i> Perquisar</button>
+                    <a href="@Url.Action("Index2")" class="btn btn-default pull-right margin-r-5"><i class="fa fa-eraser"></i> Limpar</a>
+                </div>
+            </div>
+        </form>
+
+    </div><!-- /.box-body -->
+</div><!-- /.box -->
+
+<div id="search-result"></div>
+<div id="modal-content"></div>
+
+@section scripts{
+
+    <script>
+
+        jQuery(function ($) {
+
+            $('#btn-pesquisar').click(pesquisaDados);
+
+            function pesquisaDados() {
+
+                blockUI('Carregando...');
+
+                var $form = $('#form-filtro');
+                var thisForm = $form[0];
+                var formData = $form.serialize();
+
+                $.ajax({
+                    dataType: 'html',
+                    url: thisForm.action,
+                    type: 'POST',
+                    data: formData
+                }).done(function (data) {
+                    $('#search-result').html(data);
+                    unblockUI();
+                }).fail(function (error) {
+                    console.error(error);
+                    unblockUI();
+                    toastr.options = {
+                        "closeButton": true,
+                        "timeOut": "10000",
+                        "positionClass": "toast-bottom-right"
+                    }
+                    toastr["error"]('Ocorreu um erro na requisição.');
+                });
+            }
+
+        });
+
+        function adicionarItem($this) {
+            var element = $($this);
+            element.button('loading');
+            var url = element.attr('data-url');
+
+            $('#modal-content').load(url, function (response, status) {
+                element.button('reset');
+                if (status == 'error') {
+                    toastr.options = {
+                        "closeButton": true,
+                        "timeOut": "10000",
+                        "positionClass": "toast-bottom-right"
+                    }
+                    toastr["error"]('Ocorreu um erro na requisição.');
+                }
+            });
+        }
+
+    </script>
+}

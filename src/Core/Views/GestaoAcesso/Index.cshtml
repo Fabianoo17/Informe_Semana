@@ -1,0 +1,210 @@
+﻿@{
+    ViewBag.Title = "Gestão de Acessos";
+}
+
+<span class="hidden">
+    <span id="url-obter-usuario" data-url="@Url.Action("ObterUsuario", "GestaoAcesso")"></span>
+    <span id="url-obter-acesso" data-url="@Url.Action("ObterAcesso", "GestaoAcesso")"></span>
+    <span id="url-atualizar-acesso" data-url="@Url.Action("AtualizarAcesso", "GestaoAcesso")"></span>
+</span>
+
+<div class="box">
+    <div class="box-header with-border">
+        <h3 class="box-title">Pesquisar usuário</h3>
+    </div>
+    <div class="box-body">
+        <div id="validation-message"></div>
+
+        <div class="ibox">
+            <div class="form-group">
+                <label for="matricula-usuario">Usuário</label>
+                <input style="width:20%;" class="form-control" maxlength="15" type="text" id="matricula-usuario" placeholder="Informe uma matrícula" />
+            </div>
+            <button id="btn-buscar-usuario" class="btn btn-primary" type="button"><i class="fa fa-search"></i> Buscar</button>
+            <a style="display: none;" id="btn-outro-usuario" class="btn btn-warning" href="@Url.Action("Index", "GestaoAcesso")"><i class="fa fa-random"></i> Outro usuário</a>
+        </div>
+
+        <div class="margin-t-20" id="usuario-info"></div>
+    </div>
+</div>
+
+<div id="container-perfis"></div>
+
+@section scripts{
+
+
+    <script>
+        jQuery(function ($) {
+
+            $('#btn-buscar-usuario').click(function () {
+                
+                var validationMessage = $('#validation-message'),
+                    url = $('#url-obter-usuario').attr('data-url'),
+                    matriculaUsuario = $('#matricula-usuario').val();
+              
+                var formData = {
+                    MatriculaUsuario: matriculaUsuario
+                };
+
+                $.ajax({
+                    dataType: 'json',
+                    url: url,
+                    type: "POST",
+                    data: formData,
+                    beforeSend: function () {
+                        validationMessage.html('');
+                       blockUI('Carregando...');
+                    }
+                
+                  
+
+                 
+                }).done(function (data) {
+                
+                    unblockUI();
+
+                    if (data.Success) {
+
+                        toastr.options = {
+                            "timeOut": "1000",
+                            "positionClass": "toast-bottom-right"
+                        }
+                        toastr["success"](data.Messages[0]);
+
+                        $('#matricula-usuario').attr('disabled', 'disabled');
+                        $('#btn-outro-usuario').show();
+
+                        montaTabelaUsuario(data.Data);
+                        carregaPerfis();
+                    } else {
+                        validationMessage.html(errorSummary(data.Messages));
+                    }
+
+                }).fail(function (error) {
+                   
+                    console.error(error);
+                    unblockUI();
+
+                    toastr.options = {
+                        "closeButton": true,
+                        "timeOut": "10000",
+                        "positionClass": "toast-bottom-right"
+                    }
+                    toastr["error"]('Ocorreu um erro na requisição.');
+                });
+            });
+        });
+
+        function montaTabelaUsuario(data) {
+            var tabela = '<table class="table table-striped table-condensed">';
+            tabela += '<tr>';
+            tabela += '<td style="width: 6%;"><b>Nome:</b></td>';
+            tabela += '<td><span>' + data.NOME + '</span></td>';
+            tabela += '</tr>';
+            tabela += '<tr>';
+            tabela += '<td><b>Matrícula:</b></td>';
+            tabela += '<td><span>' + data.MATRICULA + '</span></td>';
+            tabela += '</tr>';
+            tabela += '<tr>';
+            tabela += '<td><b>Unidade:</b></td>';
+            tabela += '<td><span>' + data.SG_UNID_ADM + '</span></td>';
+            tabela += '</tr>';
+            tabela += '</table>';
+
+            $('#usuario-info').html(tabela);
+        }
+
+        function carregaPerfis() {
+
+            var url = $('#url-obter-acesso').attr('data-url'),
+                matriculaUsuario = $('#matricula-usuario').val();
+        
+            var formData = {
+                MatriculaUsuario: matriculaUsuario
+            };
+
+            $.ajax({
+                dataType: 'html',
+                url: url,
+                type: "POST",
+                data: formData,
+                beforeSend: function () {
+                    blockUI('');
+                }
+            }).done(function (data) {
+
+                unblockUI();
+                $('#container-perfis').html(data);
+
+            }).fail(function (error) {
+                console.error(error);
+                unblockUI();
+
+                toastr.options = {
+                    "closeButton": true,
+                    "timeOut": "10000",
+                    "positionClass": "toast-bottom-right"
+                }
+                toastr["error"]('Ocorreu um erro na requisição.');
+            });
+        }
+
+        function atualizarPerfil($this) {
+
+            var elemento = $($this),
+                perfilId = elemento.attr('data-id'),
+                perfilNome = elemento.attr('data-nome'),
+                ativo = elemento.is(":checked"),                
+                matriculaUsuario = $('#matricula-usuario').val(),
+                url = $('#url-atualizar-acesso').attr('data-url');
+
+            var formData = {
+                'matricula': matriculaUsuario,
+                'perfilId': perfilId,
+                'ativo': ativo
+            };
+
+            $.ajax({
+                dataType: 'json',
+                url: url,
+                type: "PUT",
+                data: formData,
+                beforeSend: function () {
+                    blockUI('');
+                }
+            }).done(function (data) {
+
+                unblockUI();
+
+                if (data.Success) {
+                    toastr.options = {
+                        "closeButton": true,
+                        "timeOut": "1000",
+                        "positionClass": "toast-bottom-right"
+                    }
+                    toastr["success"](perfilNome, 'Atualizado!');
+
+                    carregaPerfis();
+                } else {
+                    toastr.options = {
+                        "closeButton": true,
+                        "timeOut": "5000",
+                        "positionClass": "toast-bottom-right"
+                    }
+                    toastr["error"](perfilNome, 'Erro ao atualizar');
+                }
+
+            }).fail(function (error) {
+                unblockUI();
+                toastr.options = {
+                    "closeButton": true,
+                    "timeOut": "10000",
+                    "positionClass": "toast-bottom-right"
+                }
+                toastr["error"]('Erro ao atualizar o perfil ' + perfilNome);
+                console.error(error);
+            });
+        }
+
+    </script>
+}

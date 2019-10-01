@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Core.ViewModels.GestaoAcesso.ControleAcessoViewModel>
+
+@if (Model != null || Model.Count() > 0)
+{
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <h3 class="box-title">Perfis</h3>
+        </div>
+        <div class="box-body">
+
+            <table class="table table-condensed table-striped">
+                <thead>
+                    <tr>
+                        <th style="width:1%;">Acesso</th>
+                        <th style="width:30%;">Perfil</th>
+                        <th style="width:10%;">@Html.DisplayNameFor(model => model.AtualizadoPor)</th>
+                        <th style="width:9%;">@Html.DisplayNameFor(model => model.DataAtualizacao)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <label class="container-checkbox">
+                                    @if (item.PerfilId == (int)Acesso.Administrador && UsuarioLogado.Matricula == ViewBag.MatriculaPerfil)
+                                    {
+                                        <input type="checkbox" @Html.IsChecked(item.Ativo) disabled="disabled">
+                                    }
+                                    else
+                                    {
+                                        <input onchange="atualizarPerfil(this);" type="checkbox" data-nome="@item.Nome" data-id="@item.PerfilId" @Html.IsChecked(item.Ativo) />
+                                    }
+                                    <span class="checkmark-checkbox"></span>
+                                </label>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nome)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AtualizadoPor)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DataAtualizacao)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">Nenhum perfil cadastrado.</div>
+}

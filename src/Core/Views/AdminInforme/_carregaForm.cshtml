@@ -1,0 +1,363 @@
+﻿@model IEnumerable<Core.Models.VW001_INFORME_ATUAL>
+@{
+
+
+    Layout = null;
+    bool verif = true;
+    var Atual = Model.Where(x => x.STATUS_ATUALIZACAO == 1).ToList();
+    var SemanaPassada = Model.Where(x => x.STATUS_ATUALIZACAO == 2).ToList();
+    int count = 1;
+}
+
+
+
+<input type="hidden" id="mostraModal" value="@SemanaPassada.Count">
+
+<div class="modal inmodal" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <i class="fa fa-clock-o modal-icon"></i>
+                <h4 class="modal-title">As ações cadastradas semana passada foram concluídas?</h4>
+
+            </div>
+            <div class="modal-body">
+                @foreach (var item in SemanaPassada)
+                {
+
+                    <label>@(count). @item.T002_INFORME_TITULO</label>
+
+                    <form>
+
+                        <div class="i-checks"> <label> <input class="i-checks" type="radio" name="choice" value="1" checked> <i></i>  Sim </label> </div>
+                       
+                            <input class="i-checks" type="radio" name="choice" value="2"> Não
+                            <input class="i-checks" type="radio" name="choice" value="3"> Manter
+
+</form>
+
+                }
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+               
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+
+                    <h4>Ações cadastradas semana passada foram concluídas?</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                </div>
+                <div class="modal-body">
+                    @foreach (var item in SemanaPassada)
+                    {
+                        <form>
+                            <label>@item.T002_INFORME_TITULO</label>
+
+                        </form>
+
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+
+<span class="hidden">
+    <span id="url-salvar-informe" data-url="@Url.Action("Create", "AdminInforme")"></span>
+</span>
+
+
+<div id="validation-message"></div>
+<div class="col-lg-12 ">
+
+
+    <div id="formulario" class="row">
+        <div class="col-lg-12">
+
+            @for (int i = 0; i < 2; i++)
+            {
+                if (Atual.Count < 2 && i == 1)
+                {
+                    verif = false;
+                }
+                else if (Atual.Count < 1)
+                {
+                    verif = false;
+                }
+
+                <div class="ibox">
+
+                    <div class="ibox-title">
+                        <h3>Informe @(i + 1)</h3>
+                    </div>
+
+                    <div class="ibox-content">
+
+                       
+                        <form id="form@(i+1)" class="" method="post" action="~/AdminInforme/create" novalidate="novalidate">
+                            @{if (verif)
+                            {<input id="T002_ID_INFORME" name="T002_ID_INFORME" type="hidden" value="@Atual[i].T002_ID_INFORME" /> }}
+                            <input id="T003_ID_COORDENACAO" name="T003_ID_COORDENACAO" type="hidden" value="@ViewBag.coord" />
+                            <input id="T004_NR_SEMANA" name="T004_NR_SEMANA" type="hidden" value="@ViewBag.semana" />
+                            <input id="T001_ID_INDICE_INFORME" name="T001_ID_INDICE_INFORME" type="hidden" value="@(i+1)" />
+                            <input id="T002_COMPETENCIA" name="T002_COMPETENCIA" type="hidden" value="@ViewBag.comp" />
+                            <input id="T002_MAT_CRIADO_POR" name="T002_MAT_CRIADO_POR" type="hidden" value="@ViewBag.Mat" />
+
+                            <div id="div1">
+
+                                <div class="form-group  row">
+
+                                    <div class="col-lg-11 "><input maxlength="100" id="T002_INFORME_TITULO" name="T002_INFORME_TITULO" data-val="true" data-val-required="O campo T002_INFORME_TITULO é obrigatório." type="text" value="@(verif ? Atual[i].T002_INFORME_TITULO : "" )" class="form-control inputInforme campo@(i+1)" onclick="hay(@(i+1))">  </div> <div class="col-lg-1 "><a class="" onclick="troca(@(i+1))"><i class="fa fa-edit fa-2x"></i></a> <a class="" onclick=""><i class="fa fa-trash fa-2x"></i></a></div>
+                                    <span class="field-validation-valid text-danger" data-valmsg-for="T002_INFORME_TITULO" data-valmsg-replace="true"></span>
+                                </div>
+                            </div>
+                            <div class="form-group  secundario@(i+1) collapse" name="secundario@(i+1)">
+                                <p>Qual resultado esperado da ação cadastrada?</p>
+                                <div rows="10" class="col-lg-11 form-group "><textarea maxlength="400" id="T002_RESULTADO_ESPERADO" name="T002_RESULTADO_ESPERADO" type="text" value="@(verif ? Atual[i].T002_RESULTADO_ESPERADO: "" )" class="form-control inputInforme campo@(i+1)"> @(verif ? Atual[i].T002_RESULTADO_ESPERADO : "")</textarea> </div>
+                                <div class="col-lg-12 row">
+                                    <div class="col-lg-1  "> <a class="btn btn-outline-success" onclick="salvarInforme(@(i+1))">Salvar</a> </div> <div class="btn btn-outline-danger"> <a class="" onclick="hay(3)">Cancelar</a> </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <br />
+            }
+            @*<div class="ibox-content">
+                    <h3>Informe 2</h3>
+                    <form id="form2" method="post" action="">
+                        @{if (@id_1 > 0)
+                        {<input id="T002_ID_INFORME" name="T002_ID_INFORME" type="hidden" value="@id_2" /> }}
+                        <input id="T003_ID_COORDENACAO" name="T003_ID_COORDENACAO" type="hidden" value="@ViewBag.coord" />
+                        <input id="T004_NR_SEMANA" name="T004_NR_SEMANA" type="hidden" value="@ViewBag.semana" />
+                        <input id="T001_ID_INDICE_INFORME" name="T001_ID_INDICE_INFORME" type="hidden" value="2" />
+                        <input id="T002_COMPETENCIA" name="T002_COMPETENCIA" type="hidden" value="@ViewBag.comp" />
+                        <input id="T002_MAT_CRIADO_POR" name="T002_MAT_CRIADO_POR" type="hidden" value="@ViewBag.Mat" />
+
+                        <div id="div2">
+
+                            <div class="form-group  row">
+
+                                <div class="col-lg-11 "><input maxlength="100" id="T002_INFORME_TITULO" name="T002_INFORME_TITULO" type="text" value="@titulo2" class="form-control inputInforme campo2" onclick="hay(2)">  </div> <div class="col-lg-1 "><a class="" onclick="troca(2)"><i class="fa fa-edit fa-2x"></i></a> <a class=""><i class="fa fa-trash fa-2x"></i></a></div>
+
+                            </div>
+                        </div>
+                        <div class="form-group  secundario2 collapse" name="secundario2">
+                            <p>Qual resultado esperado da ação cadastrada?</p>
+                            <div rows="10" class="col-lg-11 form-group "><textarea maxlength="400" id="T002_RESULTADO_ESPERADO" name="T002_RESULTADO_ESPERADO" type="text" value="@resultado2" class="form-control inputInforme campo2">  @resultado2</textarea></div>
+                            <div class="col-lg-12 row">
+                                <div class="col-lg-1  "> <a  class="btn btn-outline-success" onclick="salvarInforme('#form2')">Salvar</a> </div> <div class="btn btn-outline-danger"> <a class="" onclick="carregaForm()">Cancelar</a> </div>
+                            </div>
+                        </div>
+
+                    </form>
+
+
+
+
+                </div>*@
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+
+
+        var informe1 = $(".campo1").val();
+        var informe2 = $(".campo2").val();
+
+
+
+
+
+        if (informe1 == "") {
+            $(".campo1").prop("disabled", false);
+        } else {
+            $(".campo1").prop("disabled", true);
+        }
+        if (informe2 == "") {
+            $(".campo2").prop("disabled", false);
+        } else {
+            $(".campo2").prop("disabled", true);
+        }
+
+
+    });
+
+
+    function troca(num) {
+
+        if (num == 1) {
+            $(".campo1").prop("disabled", false);
+        }
+        if (num == 2) {
+            $(".campo2").prop("disabled", false);
+        }
+    }
+
+
+
+    function hay(num) {
+
+
+        if (num == 1) {
+
+            $('.secundario1').collapse({
+                toggle: false
+            }).collapse('show');
+
+        }
+        if (num == 2) {
+
+            $('.secundario2').collapse({
+                toggle: false
+            }).collapse('show');
+
+        }
+        if (num == 3) {
+            var nmr = $("#T003_ID_COORDENACAO").val();
+
+            jQuery.ajax({
+                url: 'AdminInforme/carregaform?COORDENACAO=' + nmr,
+                type: 'GET', // Tb pode ser post
+                async: false,
+                success: function (data) {
+
+                    $('#formulario').html(data);
+                },
+                error: function () {
+                    alert('Falha carregando os dados!');
+                }
+            });
+
+
+
+
+            //$("#div1").load("#div1");
+            //$('.secundario1').collapse({
+            //    toggle: false
+            //}).collapse('hide');
+
+
+        }
+
+
+
+
+
+    }
+    function salvarInforme(form) {
+
+        var formulario = ""
+        if (form == 1) {
+            formulario = "#form1"
+        } else if (form == 2) {
+            formulario = "#form2"
+        }
+
+        var elemento = $(formulario);
+
+        url = $('#url-salvar-informe').attr('data-url'),
+        tipo = elemento.attr('method');
+        var validationMessage = $('#validation-message');
+
+
+        var formData = elemento.serialize();
+        console.log(formData);
+        $.ajax({
+            dataType: 'json',
+            url: url,
+            type: tipo,
+            data: formData,
+            beforeSend: function () {
+                validationMessage.html('');
+                blockUI('');
+            }
+        }).done(function (data) {
+
+            unblockUI();
+
+            if (data.Success) {
+                toastr.options = {
+                    "closeButton": true,
+                    "timeOut": "1000",
+                    "positionClass": "toast-bottom-right"
+                }
+                toastr["success"]('Atualizado!');
+                carregaFormSemModal();
+
+            } else {
+                toastr.options = {
+                    "closeButton": true,
+                    "timeOut": "5000",
+                    "positionClass": "toast-bottom-right"
+                }
+                toastr["error"]('Erro ao atualizar');
+                validationMessage.html(errorSummary(data.Messages));
+            }
+
+        }).fail(function (error) {
+            unblockUI();
+            toastr.options = {
+                "closeButton": true,
+                "timeOut": "10000",
+                "positionClass": "toast-bottom-right"
+            }
+            toastr["error"]('Erro ao atualizar o Informe ');
+            console.error(error);
+
+        });
+    }
+
+
+    function mostrarModal() {
+        var modal = $("#mostraModal").val();
+        if (modal > 0) {
+
+            $('#myModal').modal('show')
+
+
+        }
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+

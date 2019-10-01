@@ -1,0 +1,93 @@
+﻿@model Core.ViewModels.InformeSemanal.ViewModelMontarInforme
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>@ViewBag.Title - @Settings.SystemName</title>
+
+
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Content/css/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Toastr style -->
+    <link href="~/Content/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <link href="~/Content/css/Site.css" rel="stylesheet" />
+    <link href="~/Content/css/plugins/iCheck/custom.css" rel="stylesheet" />
+
+
+    <link href="~/Content/css/animate.css" rel="stylesheet" />
+    <link href="~/Content/css/style.css" rel="stylesheet">
+
+
+
+</head>
+
+@{
+    var coord = Model.t003_coordenacoes;
+    var informe = Model.vw001_informe_atual.Where(x => x.STATUS_ATUALIZACAO == 1);
+
+}
+
+
+@{
+    ViewBag.Title = "Informe Semanal";
+}
+<div style="background-image: url('../../../../Content/img/back.jpg');">
+    <div class=" col-lg-12 row">
+        <div class="col-lg-3" style="text-align:justify;  color:white;">
+
+            <h2>Informe Semanal</h2>
+            <h3>@Model.buscarSemana().T004_DESC_SEMANA</h3>
+
+        </div>
+        <div class="col-lg-6" style="text-align:center; margin-top:20px; color:white;">
+            <h3></h3>
+            <h3>Ações cadastradas nesta Semana</h3>
+        </div>
+        <div class="col-lg-3">
+            <a style="margin-top:15px;" class="btn btn-outline-primary pull-right" href="AdminInforme">Admin Informe</a>
+        </div>
+    </div>
+
+    <div class="col-lg-12 row">
+
+        @foreach (var item in coord)
+        {
+            if (informe.Count(x => x.T003_ID_COORDENACAO == item.T003_ID_COORDENACAO) > 0)
+            {
+                <div class="col-lg-3">
+                    <div class="ibox">
+                        <div class="ibox-content" style="height:205px;">
+
+                            <h3>@item.T003_SG_COORDENACAO</h3>
+
+
+                            @foreach (var inf in informe.Where(x => x.T003_ID_COORDENACAO == item.T003_ID_COORDENACAO))
+                            {
+                                <ul class="sortable-list connectList agile-list" id="inprogress" title="@inf.T002_RESULTADO_ESPERADO">
+
+                                    <li class="success-element" id="task9" style="height:70px;">
+
+
+                                        @inf.T002_INFORME_TITULO
+
+                                        <div class="agile-detail">
+                                        </div>
+                                    </li>
+                                </ul>
+                            }
+                        </div>
+                    </div>
+
+
+                </div>
+            }
+        }
+    </div>
+</div>
+

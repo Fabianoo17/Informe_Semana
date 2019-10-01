@@ -1,0 +1,55 @@
+﻿<aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <ul class="sidebar-menu" data-widget="tree">
+            <li class="header">NAVEGAÇÃO PRINCIPAL</li>
+
+            <li class="@Html.IsActionActive("Index", "Home")">
+                <a href="@Url.Action("Index", "Home", new { Area = "" })">
+                    <i class="fa fa-home"></i> <span>Home</span>
+                </a>
+            </li>
+
+            @if (this.IfAccess(new[] { Acesso.Administrador }))
+            {
+                <li class="@Html.IsActionActive("Index", "GestaoAcesso")">
+                    <a href="@Url.Action("Index", "GestaoAcesso", new { Area = "" })">
+                        <i class="fa fa-lock"></i> <span>Gestão de Acessos</span>
+                    </a>
+                </li>
+            }
+
+            @if (this.IfAccess(new[] { Acesso.Administrador, Acesso.Basico, Acesso.SemPerfil }))
+            {
+                <li class="treeview @Html.IsActionActiveTreeview("Exemplo")">
+                    <a href="#">
+                        <i class="fa fa-dashboard"></i> <span>Exemplos</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="@Html.IsActionActive("Index", "Exemplo")">
+                            <a href="@Url.Action("Index", "Exemplo", new { Area = "" })">
+                                <i class="fa fa-circle-o"></i> Listar
+                            </a>
+                        </li>
+                        <li class="@Html.IsActionActive("Index2", "Exemplo")">
+                            <a href="@Url.Action("Index2", "Exemplo", new { Area = "" })">
+                                <i class="fa fa-circle-o"></i> ListarJS
+                            </a>
+                        </li>
+                        <li class="@Html.IsActionActive("Index3", "Exemplo")">
+                            <a href="@Url.Action("Index3", "Exemplo", new { Area = "" })">
+                                <i class="fa fa-circle-o"></i> Outro
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            }
+        </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>
