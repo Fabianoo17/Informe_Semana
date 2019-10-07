@@ -42,6 +42,5 @@ C:\Users\fabia\OneDrive\Área de Trabalho\CoreWeb\src\Core\bin\System.Web.WebPag
 C:\Users\fabia\OneDrive\Área de Trabalho\CoreWeb\src\Core\bin\System.Web.WebPages.Razor.xml
 C:\Users\fabia\OneDrive\Área de Trabalho\CoreWeb\src\Core\bin\Antlr3.Runtime.pdb
 C:\Users\fabia\OneDrive\Área de Trabalho\CoreWeb\src\Core\bin\Newtonsoft.Json.xml
-C:\Users\fabia\OneDrive\Área de Trabalho\CoreWeb\src\Core\obj\Debug\Core.csprojResolveAssemblyReference.cache
 C:\Users\fabia\OneDrive\Área de Trabalho\CoreWeb\src\Core\obj\Debug\Core.dll
 C:\Users\fabia\OneDrive\Área de Trabalho\CoreWeb\src\Core\obj\Debug\Core.pdb
